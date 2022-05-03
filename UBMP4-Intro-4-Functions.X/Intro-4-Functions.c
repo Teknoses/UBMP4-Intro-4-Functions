@@ -98,14 +98,17 @@ int main(void)
 /* Program Analysis
  * 
  * 1.   Which function in this program will run first? How do you know?
- * 
+ * The main function will run first in the program because when the UBMP4 starts up, it searches for the main function first.
+
  * 2.   What is the purpose of the 'unsigned char' variable type declaration in
  *      the button_pressed() function? Is it used by this function to receive
  *      a variable from, or return a variable to the main code?
- * 
+ *  The purpose of the button_pressed() function is to give a value when it is asked for one. It is used to return a variable to the main code.
+
  * 3.   How does the function call statement 'button = button_pressed();' in the
  *      main code support your answer in 2, above?
- * 
+ *      It supports my answer since button is used in main
+
  * 4.   What is the purpose of the 'unsigned char' variable type declaration in
  *      the pwm_LED5() function? Where does the value of the variable come from?
  *      Where does this value get stored in the function?
