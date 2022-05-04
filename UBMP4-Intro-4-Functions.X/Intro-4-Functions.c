@@ -28,38 +28,9 @@ const char DOWN = 2;
 unsigned char LED5Brightness = 125;
 unsigned char button;
 
-unsigned char button_pressed(void)
-{
-    if(SW4 == 0)
-    {
-        return(UP);
-    }
-    else if(SW5 == 0)
-    {
-        return(DOWN);
-    }
-    else
-    {
-        return(noButton);
-    }
-}
+unsigned char button_pressed(void);
 
-void pwm_LED5(unsigned char pwmValue)
-{
-    for(unsigned char t = 255; t != 0; t --)
-    {
-        if(pwmValue == t)
-        {
-            LED5 = 1;
-        }
-        __delay_us(20);
-    }
-    // End the pulse if pwmValue < 255
-    if(pwmValue < 255)
-    {
-        LED5 = 0;
-    }
-}
+void pwm_LED5(unsigned char);
 
 int main(void)
 {
@@ -91,6 +62,38 @@ int main(void)
         }
     }
 }
+unsigned char button_pressed(void)
+{
+    if(SW4 == 0)
+    {
+        return(UP);
+    }
+    else if(SW5 == 0)
+    {
+        return(DOWN);
+    }
+    else
+    {
+        return(noButton);
+    }
+}
+
+void pwm_LED5(LED5Brightness)
+{
+    for(unsigned char t = 255; t != 0; t --)
+    {
+        if(LED5Brightness == t)
+        {
+            LED5 = 1;
+        }
+        __delay_us(20);
+    }
+    // End the pulse if pwmValue < 255
+    if(LED5Brightness < 255)
+    {
+        LED5 = 0;
+    }
+}
 
 // Move the function code to here in Program Analysis, step 5.
 
@@ -107,11 +110,13 @@ int main(void)
 
  * 3.   How does the function call statement 'button = button_pressed();' in the
  *      main code support your answer in 2, above?
- *      It supports my answer since button is used in main
+ *      It supports my answer since button is used in main and is the same as button_pressed();, every time button is called, it's actually calling for button_pressed();.
 
  * 4.   What is the purpose of the 'unsigned char' variable type declaration in
  *      the pwm_LED5() function? Where does the value of the variable come from?
  *      Where does this value get stored in the function?
+The purpose of pwn_LED5() is to control the brightness of the LED. The value comes from pwmValue, which gets its value from LED5Brightness.
+The value gets stored in if(pwmValue == t) line.
  * 
  * 5.   C language compilers typically read through the entire program in a
  *      single pass, converting C code into machine code. The two functions,
@@ -147,6 +152,8 @@ void pwm_LED5(unsigned char);
  *      What is the difference between the function prototype for pwm_LED5()
  *      and the actual pwm_LED5() function declaration statement later in the
  *      code?
+ The difference between the prototype and actual is that the actual one is processing all the info and returning it. 
+ The prototype just lets the program knows that there is a function available.
  * 
  * 6.   Building the program with the added function prototypes should now work
  *      without generating errors, just as it did in the original program.
@@ -170,16 +177,21 @@ void pwm_LED5(unsigned char);
  *      functions called from the main() function in this program. Are any
  *      values passed between this code and the two setup functions? How do
  *      you know?
- * 
+ *  There are values passed from the setup functions to the main() function. In the setup functions, there are multiple variables that are assigned new values with purpose.
+   For example, In OSC_config(), the first line is  OSCCON = 0xFC;              // Set 16MHz HFINTOSC with 3x PLL enabled, OSCCON is assigned a new value to set the Mhz to 16.
+
  * 7.   The 'button' variable is a global variable because it was assigned
  *      at the beginning of the program, outside of any functions. Global
  *      variables are available to all functions. How does the 'button' variable
  *      get assigned a value? In which function does this occur?
+    The button variable gets its value from the button_pressed() function, but it happens in the main function.
+
  * 
  * 8.   Which variable does the value of LED5Brightness get transferred to in
  *      the pwm_LED5() function? Is this variable global, or local to the LED
  *      function? Could the pwm_LED5 function use the LED5Brightness variable
  *      directly, instead of transferring its value to another variable?
+        LED5Brightness variable gets transfered to the pwmValue variable. The pwmValue variable is only local to the pwm_LED5() function since it is assigned in that function.
  * 
  * Programming Activities
  * 
