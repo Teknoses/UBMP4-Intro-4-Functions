@@ -23,6 +23,8 @@
 const char noButton = 0;
 const char UP = 1;
 const char DOWN = 2;
+const char MAX = 3;
+const char OFF = 4;
 
 // Program variable definitions
 unsigned char LED5Brightness = 125;
@@ -51,6 +53,15 @@ int main(void)
         {
             LED5Brightness -= 1;
         }
+        if(button == MAX)
+        {
+            LED5Brightness = 255;
+        }
+
+        if(button == OFF)
+        {
+            LED5Brightness = 0;
+        }
 
         // PWM LED5 with current brightness
         pwm_LED5(LED5Brightness);
@@ -62,9 +73,21 @@ int main(void)
         }
     }
 }
+unsigned char brightnesschange(unsigned char change)
+{
+    
+}
 unsigned char button_pressed(void)
 {
-    if(SW4 == 0)
+    if(SW3 == 0)
+    {
+        return(MAX);
+    }
+    else if(SW2 == 0)
+    {
+        return(OFF);
+    }
+    else if(SW4 == 0)
     {
         return(UP);
     }
@@ -78,18 +101,18 @@ unsigned char button_pressed(void)
     }
 }
 
-void pwm_LED5(LED5Brightness)
+void pwm_LED5(unsigned char pwmValue)
 {
     for(unsigned char t = 255; t != 0; t --)
     {
-        if(LED5Brightness == t)
+        if(pwmValue == t)
         {
             LED5 = 1;
         }
         __delay_us(20);
     }
     // End the pulse if pwmValue < 255
-    if(LED5Brightness < 255)
+    if(pwmValue < 255)
     {
         LED5 = 0;
     }
@@ -192,6 +215,7 @@ void pwm_LED5(unsigned char);
  *      function? Could the pwm_LED5 function use the LED5Brightness variable
  *      directly, instead of transferring its value to another variable?
         LED5Brightness variable gets transfered to the pwmValue variable. The pwmValue variable is only local to the pwm_LED5() function since it is assigned in that function.
+        No, you cannot use the LED5Brightness directly replace the pwm_LED5.
  * 
  * Programming Activities
  * 
