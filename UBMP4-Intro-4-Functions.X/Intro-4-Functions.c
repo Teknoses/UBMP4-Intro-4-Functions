@@ -21,16 +21,18 @@
 
 // Button constant definitions
 const char noButton = 0;
-const char UP = 1;
-const char DOWN = 2;
-const char MAX = 3;
-const char OFF = 4;
+const char SW2LED = 1;
+const char SW3LED = 2;
+const char SW4LED = 3;
+const char SW5LED = 4;
 
 // Program variable definitions
 unsigned char LED5Brightness = 125;
 unsigned char button;
 
 unsigned char button_pressed(void);
+
+void TurnOnLED(unsigned char);
 
 void pwm_LED5(unsigned char);
 
@@ -41,30 +43,7 @@ int main(void)
 	
     while(1)
 	{
-        // Read up/down buttons and adjust LED5 brightness
-        button = button_pressed();
-        
-        if(button == UP && LED5Brightness < 255)
-        {
-            LED5Brightness += 1;
-        }
-
-        if(button == DOWN && LED5Brightness > 0)
-        {
-            LED5Brightness -= 1;
-        }
-        if(button == MAX)
-        {
-            LED5Brightness = 255;
-        }
-
-        if(button == OFF)
-        {
-            LED5Brightness = 0;
-        }
-
-        // PWM LED5 with current brightness
-        pwm_LED5(LED5Brightness);
+     TurnOnLED(button_pressed());
         
         // Activate bootloader if SW1 is pressed.
         if(SW1 == 0)
@@ -73,34 +52,50 @@ int main(void)
         }
     }
 }
-unsigned char brightnesschange(unsigned char change)
-{
-    
-}
+
+
 unsigned char button_pressed(void)
 {
-    if(SW3 == 0)
+    if(SW2 == 0)
     {
-        return(MAX);
+        return(SW2LED);
     }
-    else if(SW2 == 0)
+    else if(SW3 == 0)
     {
-        return(OFF);
+        return(SW3LED);
     }
     else if(SW4 == 0)
     {
-        return(UP);
+        return(SW4LED);
     }
     else if(SW5 == 0)
     {
-        return(DOWN);
+        return(SW5LED);
     }
     else
     {
         return(noButton);
     }
 }
-
+void TurnOnLED(unsigned char whichSwitch)
+{
+        if(whichSwitch == SW2LED)
+        {
+            LED3 = 1;
+        }
+        if(whichSwitch == SW3LED)
+        {
+            LED4 = 1; 
+        }
+        if(whichSwitch == SW4LED)
+        {
+            LED5 = 1;
+        }
+        if(whichSwitch == SW5LED)
+        {
+            LED6 = 1;
+        }
+}
 void pwm_LED5(unsigned char pwmValue)
 {
     for(unsigned char t = 255; t != 0; t --)
@@ -229,11 +224,154 @@ void pwm_LED5(unsigned char);
  *      these buttons will over-write the current LED5Brightness value with
  *      either 255 or 0, while still allowing SW4 and SW5 to adjust the
  *      brightness in smaller increments when pressed.
+//Variables
+    const char noButton = 0;
+    const char UP = 1;
+    const char DOWN = 2;
+    const char MAX = 3;
+    const char OFF = 4;
+//declarations  
+
+unsigned char button_pressed(void);
+
+void pwm_LED5(unsigned char);
+
+//Inside main()
+    while(1)
+	{
+        // Read up/down buttons and adjust LED5 brightness
+        button = button_pressed();
+        
+        if(button == UP && LED5Brightness < 255)
+        {
+            LED5Brightness += 1;
+        }
+
+        if(button == DOWN && LED5Brightness > 0)
+        {
+            LED5Brightness -= 1;
+        }
+        if(button == MAX)
+        {
+            LED5Brightness = 255;
+        }
+
+        if(button == OFF)
+        {
+            LED5Brightness = 0;
+        }
+
+        // PWM LED5 with current brightness
+        pwm_LED5(LED5Brightness);
+     } 
+//Functions  
+unsigned char button_pressed(void)
+{
+    if(SW3 == 0)
+    {
+        return(MAX);
+    }
+    else if(SW2 == 0)
+    {
+        return(OFF);
+    }
+    else if(SW4 == 0)
+    {
+        return(UP);
+    }
+    else if(SW5 == 0)
+    {
+        return(DOWN);
+    }
+    else
+    {
+        return(noButton);
+    }
+}
+
+void pwm_LED5(unsigned char pwmValue)
+{
+    for(unsigned char t = 255; t != 0; t --)
+    {
+        if(pwmValue == t)
+        {
+            LED5 = 1;
+        }
+        __delay_us(20);
+    }
+    // End the pulse if pwmValue < 255
+    if(pwmValue < 255)
+    {
+        LED5 = 0;
+    }
+}
  *
  * 2.   Create a function that will return a number from 1-4 corresponding to
  *      which of the SW2 to SW5 switches is pressed, or return 0 if no switches
  *      are pressed. Then, create a function that will accept a number from 1 to
  *      4 that lights the corresponding LED beside each button.
+//variables
+
+const char noButton = 0;
+const char SW2LED = 1;
+const char SW3LED = 2;
+const char SW4LED = 3;
+const char SW5LED = 4;
+
+//declarations
+
+unsigned char button_pressed(void);
+
+void TurnOnLED(unsigned char);
+
+//Inside Main
+    while(1)
+	{
+     TurnOnLED(button_pressed());
+    }
+//functions
+unsigned char button_pressed(void)
+{
+    if(SW2 == 0)
+    {
+        return(SW2LED);
+    }
+    else if(SW3 == 0)
+    {
+        return(SW3LED);
+    }
+    else if(SW4 == 0)
+    {
+        return(SW4LED);
+    }
+    else if(SW5 == 0)
+    {
+        return(SW5LED);
+    }
+    else
+    {
+        return(noButton);
+    }
+}
+void TurnOnLED(unsigned char whichSwitch)
+{
+        if(whichSwitch == SW2LED)
+        {
+            LED3 = 1;
+        }
+        if(whichSwitch == SW3LED)
+        {
+            LED4 = 1; 
+        }
+        if(whichSwitch == SW4LED)
+        {
+            LED5 = 1;
+        }
+        if(whichSwitch == SW5LED)
+        {
+            LED6 = 1;
+        }
+}
  * 
  * 3.   Create a sound function that receives a parameter representing a tone's
  *      period. Modify your button function, above, to return a variable that
