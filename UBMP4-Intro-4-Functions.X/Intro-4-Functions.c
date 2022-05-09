@@ -20,21 +20,20 @@
 // TODO Set linker code offset to '800' under "Additional options" pull-down.
 
 // Button constant definitions
-const char noButton = 0;
-const char SW2LED = 1;
-const char SW3LED = 2;
-const char SW4LED = 3;
-const char SW5LED = 4;
+
 
 // Program variable definitions
-unsigned char LED5Brightness = 125;
-unsigned char button;
+unsigned int eightbitvalue = 142;
+unsigned char ONES;
+unsigned char TENS;
+unsigned char HUNDREDS;
 
-unsigned char button_pressed(void);
-
-void TurnOnLED(unsigned char);
-
-void pwm_LED5(unsigned char);
+void Splittingdigits(unsigned char number)
+{
+  ONES = eightbitvalue % 10;   
+  TENS = eightbitvalue/10 % 10;
+  HUNDREDS = eightbitvalue/100 % 10;
+}
 
 int main(void)
 {
@@ -43,75 +42,28 @@ int main(void)
 	
     while(1)
 	{
-     TurnOnLED(button_pressed());
-        
-        // Activate bootloader if SW1 is pressed.
-        if(SW1 == 0)
-        {
-            RESET();
-        }
+      Splittingdigits(eightbitvalue);
+      if(ONES == 2)
+      {
+          LED3 = 1;
+      }
+      if(TENS == 4)
+      {
+          LED4 = 1;
+      }
+      if(HUNDREDS == 1)
+      {
+          LED5 = 1;
+      }
+      if(SW1 == 0)
+      {
+          RESET();
+      }
     }
 }
 
 
-unsigned char button_pressed(void)
-{
-    if(SW2 == 0)
-    {
-        return(SW2LED);
-    }
-    else if(SW3 == 0)
-    {
-        return(SW3LED);
-    }
-    else if(SW4 == 0)
-    {
-        return(SW4LED);
-    }
-    else if(SW5 == 0)
-    {
-        return(SW5LED);
-    }
-    else
-    {
-        return(noButton);
-    }
-}
-void TurnOnLED(unsigned char whichSwitch)
-{
-        if(whichSwitch == SW2LED)
-        {
-            LED3 = 1;
-        }
-        if(whichSwitch == SW3LED)
-        {
-            LED4 = 1; 
-        }
-        if(whichSwitch == SW4LED)
-        {
-            LED5 = 1;
-        }
-        if(whichSwitch == SW5LED)
-        {
-            LED6 = 1;
-        }
-}
-void pwm_LED5(unsigned char pwmValue)
-{
-    for(unsigned char t = 255; t != 0; t --)
-    {
-        if(pwmValue == t)
-        {
-            LED5 = 1;
-        }
-        __delay_us(20);
-    }
-    // End the pulse if pwmValue < 255
-    if(pwmValue < 255)
-    {
-        LED5 = 0;
-    }
-}
+
 
 // Move the function code to here in Program Analysis, step 5.
 
@@ -376,6 +328,57 @@ void TurnOnLED(unsigned char whichSwitch)
  * 3.   Create a sound function that receives a parameter representing a tone's
  *      period. Modify your button function, above, to return a variable that
  *      will be passed to the sound function to make four different tones.
+//variables
+const char noButton = 0;
+const char SW2Sound = 500;
+const char SW3Sound = 1000;
+const char SW4Sound = 750;
+const char SW5Sound = 1500;
+//declarations
+unsigned char button_pressed(void);
+
+void BeeperSounds(unsigned char);
+//inside main
+     while(1)
+	{
+     BeeperSounds(button_pressed());
+    }
+
+//functions
+unsigned char button_pressed(void)
+{
+    if(SW2 == 0)
+    {
+        return(SW2Sound);
+    }
+    else if(SW3 == 0)
+    {
+        return(SW3Sound);
+    }
+    else if(SW4 == 0)
+    {
+        return(SW4Sound);
+    }
+    else if(SW5 == 0)
+    {
+        return(SW5Sound);
+    }
+    else
+    {
+        return(noButton);
+    }
+}
+void BeeperSounds(unsigned char pitch)
+{
+    if(pitch != 0)
+    {
+       for(unsigned int cycles = 50; cycles != 0; cycles--) //length of time 
+        {
+            BEEPER = !BEEPER;
+            for(unsigned int p = pitch; p != 0; p --); //pitch
+        }
+    }
+}
  * 
  * 4.   A function that converts an 8-bit binary value into its decimal
  *      equivalent would be useful for helping us to debug our programs. Create
@@ -385,4 +388,38 @@ void TurnOnLED(unsigned char whichSwitch)
  *      a value of 142 will result in the hundreds variable containing the
  *      value 1, the tens variable containing 4, and the ones variable 2. How
  *      could you test this function to verify that it works? Try it!
+//Variables
+unsigned int eightbitvalue = 142;
+unsigned char ONES;
+unsigned char TENS;
+unsigned char HUNDREDS;
+//Declarations/Function
+void Splittingdigits(unsigned char number)
+{
+  ONES = eightbitvalue % 10;   
+  TENS = eightbitvalue/10 % 10;
+  HUNDREDS = eightbitvalue/100 % 10;
+}
+
+int main(void)
+{
+    OSC_config();               // Configure internal oscillator for 48 MHz
+    UBMP4_config();             // Configure on-board UBMP4 I/O devices
+	
+    while(1)
+	{
+      Splittingdigits(eightbitvalue);
+      if(ONES == 2)
+      {
+          LED3 = 1;
+      }
+      if(TENS == 4)
+      {
+          LED4 = 1;
+      }
+      if(HUNDREDS == 1)
+      {
+          LED5 = 1;
+      }
+}
  */
